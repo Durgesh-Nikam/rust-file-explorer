@@ -1,8 +1,8 @@
 [package]
 name = "rust-file-explorer"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "A fast file explorer which made using rust which utilizes caching for improved performance "
+authors = ["Vidit Agrawal", "Bhushan Patil", "Durgesh Nikam","Mayur Ghodke"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
