@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{ Deserialize, Serialize };
 use std::path::PathBuf;
 use sysinfo::{ Disk, DiskExt, System, SystemExt };
 
@@ -11,6 +11,12 @@ pub struct Volume {
     available_gb: u16,
     used_gb: u16,
     total_gb: u16,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub enum DirectoryChild {
+    File(String, String),
+    Directory(String, String),
 }
 
 impl Volume {
