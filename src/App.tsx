@@ -62,7 +62,7 @@ const App = () => {
         <SearchBar />
         <div className="w-7/12">
           {currentVolume === "" ? (
-            <VolumeList volumes={volumes} onClick={handleVolumeClick} />
+            <VolumeList volumes={volumes} onDoubleClick={handleVolumeClick} />
           ) : (
             <DirectoryContents
               content={directoryContents}

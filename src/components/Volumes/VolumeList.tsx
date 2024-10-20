@@ -4,9 +4,9 @@ import VolumeComponent from "./VolumeComponent";
 
 interface Props {
   volumes: Volume[];
-  onClick: (mountpoint: string) => void;
+  onDoubleClick: (mountpoint: string) => void;
 }
-const VolumeList = ({ volumes, onClick }: Props) => {
+const VolumeList = ({ volumes, onDoubleClick }: Props) => {
   if (volumes.length === 0) {
     return <LoadingPlaceholder />;
   }
@@ -17,7 +17,7 @@ const VolumeList = ({ volumes, onClick }: Props) => {
         <VolumeComponent
           key={`${volume.name}-${idx}`}
           volume={volume}
-          onClick={() => onClick(volume.mountpoint)}
+          onDoubleClick={() => onDoubleClick(volume.mountpoint)}
         />
       ))}
     </div>

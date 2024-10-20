@@ -3,14 +3,14 @@ import { Volume } from "../../types";
 
 interface Props {
   volume: Volume;
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  onDoubleClick: MouseEventHandler<HTMLButtonElement>;
 }
 
-const VolumeComponent = ({ volume, onClick }: Props) => {
+const VolumeComponent = ({ volume, onDoubleClick }: Props) => {
   return (
     <button
       className="p-5 w-56 bg-darker radius rounded cursor-pointer"
-      onClick={onClick}
+      onDoubleClick={onDoubleClick}
     >
       <h3>
         {volume.name} ({volume.mountpoint})
