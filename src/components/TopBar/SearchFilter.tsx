@@ -2,17 +2,18 @@ import Input from "../../ui/Input";
 
 const SearchFilter = () => {
   return (
-    <div className="space-x-2 flex justify-center bg-darker p-4 rounded-bl-lg rounded-br-lg w-62">
-      <div className="flex flex-col space-y-2">
+    <div className="grid grid-cols-1 md:grid-cols-1 gap-4 m-5 mb-2">
+      <div className=" items-center">
         <label>Extension</label>
-        <label>Files</label>
-        <label>Folders</label>
-      </div>
-
-      <div className="flex flex-col space-y-2 relative">
         <Input />
-        <input className="absolute left-2 top-8" type="checkbox" />
-        <input className="absolute left-2 top-16" type="checkbox" />
+      </div>
+      <div>
+        <input className="mr-4" type="checkbox" />
+        <label>Files</label>
+      </div>
+      <div>
+        <input className="mr-4" type="checkbox" />
+        <label>Folders</label>
       </div>
     </div>
   );
