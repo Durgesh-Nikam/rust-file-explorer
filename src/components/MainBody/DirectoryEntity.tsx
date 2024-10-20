@@ -3,13 +3,17 @@ import { DirectoryContentType } from "../../types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faFolder } from "@fortawesome/free-solid-svg-icons";
 
-interface Props {
+interface DirectoryEntityProps {
   name: string;
   type: DirectoryContentType;
   onDoubleClick: MouseEventHandler<HTMLButtonElement>;
 }
 
-const DirectoryEntity = ({ name, type, onDoubleClick }: Props) => {
+const DirectoryEntity = ({
+  name,
+  type,
+  onDoubleClick,
+}: DirectoryEntityProps) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   return (
@@ -18,11 +22,9 @@ const DirectoryEntity = ({ name, type, onDoubleClick }: Props) => {
       className="overflow-ellipsis whitespace-nowrap overflow-hidden"
     >
       <button
-        className="bg-background hover:bg-bright cursor-pointer w-full h-7 flex"
-        onDoubleClick={(e) => {
-          onDoubleClick(e);
-        }}
         ref={buttonRef}
+        className="bg-background hover:bg-bright cursor-pointer w-full h-7 flex"
+        onDoubleClick={onDoubleClick}
       >
         <div className="mr-1 ml-1">
           <FontAwesomeIcon
@@ -31,7 +33,7 @@ const DirectoryEntity = ({ name, type, onDoubleClick }: Props) => {
             color={type == "File" ? "gray" : "#FFD54F"}
           />
         </div>
-        {name}
+        <span>{name}</span>
       </button>
     </div>
   );

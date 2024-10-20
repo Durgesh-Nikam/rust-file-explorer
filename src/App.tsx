@@ -1,72 +1,78 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import SearchBar from "./components/TopBar/SearchBar";
-import { Volume } from "./types";
-import { invoke } from "@tauri-apps/api";
 import VolumeList from "./components/Volumes/VolumeList";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import {
   selectDirectoryContents,
   updateDirectoryContents,
 } from "./store/slices/currentDirectorySlice";
-import { openDirectory } from "./ipc";
 import DirectoryContents from "./components/MainBody/DirectoryContents";
+import {
+  selectCurrentVolume,
+  selectVolumes,
+  setCurrentVolume,
+  setVolumes,
+} from "./store/slices/volumesSlice";
+import { getVolumes, openDirectory } from "./ipc";
 
-function App() {
+const App = () => {
   const dispatch = useAppDispatch();
   const directoryContents = useAppSelector(selectDirectoryContents);
+  const volumes = useAppSelector(selectVolumes);
+  const currentVolume = useAppSelector(selectCurrentVolume);
 
-  const [volumes, setVolumes] = useState<Volume[]>([]);
-  const [currentVolume, setCurrentVolume] = useState("");
-
-  const getNewDirectoryContents = async (mountpoint: string) => {
-    const contents = await openDirectory(mountpoint);
-    dispatch(updateDirectoryContents(contents));
-  };
-
-  const onVolumeClick = async (mountpoint: string) => {
-    setCurrentVolume(mountpoint);
-    await getNewDirectoryContents(mountpoint);
-  };
-
-  async function onDirectoryClick(filePath: string) {
-    await getNewDirectoryContents(filePath);
-  }
-
-  const getVolumes = async () => {
+  useEffect(() => {
     if (volumes.length > 0) {
       return;
     }
+    const fetchVolumes = async () => {
+      try {
+        const newVolumes = await getVolumes();
+        dispatch(setVolumes(newVolumes));
+      } catch (error) {
+        console.error("Failed to fetch volumes:", error);
+      }
+    };
 
-    const newVolumes = await invoke<Volume[]>("get_volumes");
-    setVolumes(newVolumes);
+    fetchVolumes();
+  }, []);
+
+  const handleVolumeClick = async (mountpoint: string) => {
+    try {
+      dispatch(setCurrentVolume(mountpoint));
+      const contents = await openDirectory(mountpoint);
+      dispatch(updateDirectoryContents(contents));
+    } catch (error) {
+      console.error("Failed to open volume: ", error);
+    }
   };
 
-  let render = 0;
-
-  useEffect(() => {
-    if (render === 0) {
-      getVolumes().catch(console.error);
+  const handleDirectoryClick = async (filePath: string) => {
+    try {
+      const contents = await openDirectory(filePath);
+      dispatch(updateDirectoryContents(contents));
+    } catch (error) {
+      console.error("Failed to open directory: ", error);
     }
+  };
 
-    render += 1;
-  }, []);
   return (
     <div>
       <div className="pb-5">
         <SearchBar />
         <div className="w-7/12">
           {currentVolume === "" ? (
-            <VolumeList volumes={volumes} onClick={onVolumeClick} />
+            <VolumeList volumes={volumes} onClick={handleVolumeClick} />
           ) : (
             <DirectoryContents
               content={directoryContents}
-              onDirectoryClick={onDirectoryClick}
+              onDirectoryClick={handleDirectoryClick}
             />
           )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default App;
