@@ -57,19 +57,27 @@ const App = () => {
   };
 
   return (
-    <div>
-      <div className="pb-5">
-        <SearchBar />
-        <div className="w-7/12">
-          {currentVolume === "" ? (
-            <VolumeList volumes={volumes} onDoubleClick={handleVolumeClick} />
-          ) : (
-            <DirectoryContents
-              content={directoryContents}
-              onDirectoryClick={handleDirectoryClick}
-            />
-          )}
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
+      <div className="mb-6 ">
+        <div className="flex justify-between items-center">
+          <img
+            src="./public/images/disk/icon2.png"
+            alt="Logo"
+            style={{ height: 50, width: 50 }}
+          />
+          <SearchBar />
+          <div className="w-10"></div>
         </div>
+      </div>
+      <div>
+        {currentVolume === "" ? (
+          <VolumeList volumes={volumes} onDoubleClick={handleVolumeClick} />
+        ) : (
+          <DirectoryContents
+            content={directoryContents}
+            onDirectoryClick={handleDirectoryClick}
+          />
+        )}
       </div>
     </div>
   );

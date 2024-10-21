@@ -23,13 +23,13 @@ const DirectoryEntity = ({
     >
       <button
         ref={buttonRef}
-        className="bg-background hover:bg-bright cursor-pointer w-full h-7 flex"
+        className="bg-slate-900 hover:bg-bright cursor-pointer w-full h-9 flex items-center"
         onDoubleClick={onDoubleClick}
       >
         <div className="mr-1 ml-1">
           <FontAwesomeIcon
             icon={type == "File" ? faFile : faFolder}
-            size="lg"
+            size="2x"
             color={type == "File" ? "gray" : "#FFD54F"}
           />
         </div>
