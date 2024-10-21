@@ -8,10 +8,10 @@ const SearchBar = () => {
   return (
     <div className="search-container">
       <div className="flex items-center">
-        <FaSearch size={23} color="#dcdcdc" style={{ margin: 6 }} />
+        <FaSearch size={22} color="#dcdcdc" className="m-1" />
         <Input />
         <button onClick={() => setShowSearch(!showSearch)} className="advance">
-          {"Advance Search"}
+          {"Advance"}
         </button>
       </div>
       {showSearch && (

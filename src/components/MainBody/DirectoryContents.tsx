@@ -1,3 +1,4 @@
+import { openFile } from "../../ipc";
 import { DirectoryContent, DirectoryContentType } from "../../types";
 import DirectoryEntity from "./DirectoryEntity";
 
@@ -10,6 +11,10 @@ const DirectoryContents = ({
   content,
   onDirectoryClick,
 }: DirectoryContentsProps) => {
+  const onFileClick = async (path: string) => {
+    await openFile(path).catch((err) => alert(err));
+  };
+
   if (content.length === 0) {
     return <p>There are no files in this directory.</p>;
   }
@@ -26,7 +31,7 @@ const DirectoryContents = ({
             onDoubleClick={() =>
               fileType === "Directory"
                 ? onDirectoryClick(filePath)
-                : console.log(`You clicked on: ${fileName}`)
+                : onFileClick(filePath)
             }
           />
         );

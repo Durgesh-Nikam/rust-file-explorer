@@ -1,4 +1,5 @@
 use std::fs::read_dir;
+use crate::errors::Error;
 
 use super::volume::DirectoryChild;
 
@@ -25,4 +26,25 @@ pub async fn open_directory(path: String) -> Result<Vec<DirectoryChild>, ()> {
             })
             .collect()
     )
+}
+
+#[tauri::command]
+pub async fn open_file(path: String) -> Result<(), Error> {
+    let output_res = open::commands(path)[0].output();
+    let output = match output_res {
+        Ok(output) => output,
+        Err(err) => {
+            let err_msg = format!("Failed to get open command output: {}", err);
+            return Err(Error::Custom(err_msg));
+        }
+    };
+
+    if output.status.success() {
+        return Ok(());
+    }
+
+    let err_msg = String::from_utf8(output.stderr).unwrap_or(
+        String::from("Failed to open file and deserialize stderr.")
+    );
+    Err(Error::Custom(err_msg))
 }

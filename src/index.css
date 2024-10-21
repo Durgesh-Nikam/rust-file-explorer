@@ -71,7 +71,7 @@ progress::-webkit-progress-value {
   background-color: #3a3e47;
   border-radius: 6px;
   margin: 2px;
-  padding: 8px 15px 8px 15px;
+  padding: 5px 15px 5px 15px;
   margin-left: 10px;
 }
 .search-container input {
