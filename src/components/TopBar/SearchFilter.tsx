@@ -1,19 +1,31 @@
-import Input from "../../ui/Input";
-
 const SearchFilter = () => {
   return (
-    <div className="flex items-center mt-2 gap-3">
-      <div className="ml-2">
-        <label>Extension</label>
-        <Input />
+    <div className="absolute right-0 top-full mt-2 mr-11 w-72 rounded-lg bg-gray-700 p-4 shadow-lg">
+      <div className="mb-2">
+        <label
+          htmlFor="extension"
+          className="block text-sm mb-2 font-medium text-gray-400"
+        >
+          Extension
+        </label>
+        <input
+          id="extension"
+          type="text"
+          className="w-full rounded bg-gray-600 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder=".pdf, .txt, etc."
+        />
       </div>
-      <div>
-        <input className="mr-2" type="checkbox" />
-        <label>Files</label>
+      <div className="flex items-center mb-2">
+        <input id="files" type="checkbox" className="mr-2" />
+        <label htmlFor="files" className="text-sm">
+          Files
+        </label>
       </div>
-      <div>
-        <input className="mr-2" type="checkbox" />
-        <label>Folders</label>
+      <div className="flex items-center">
+        <input id="folders" type="checkbox" className="mr-2" />
+        <label htmlFor="folders" className="text-sm">
+          Folders
+        </label>
       </div>
     </div>
   );

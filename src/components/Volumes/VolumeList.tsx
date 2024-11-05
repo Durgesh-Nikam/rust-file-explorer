@@ -1,18 +1,18 @@
 import { Volume } from "../../types";
-import LoadingPlaceholder from "../LoadingPlaceholder";
 import VolumeComponent from "./VolumeComponent";
 
 interface Props {
   volumes: Volume[];
   onDoubleClick: (mountpoint: string) => void;
 }
+
 const VolumeList = ({ volumes, onDoubleClick }: Props) => {
   if (volumes.length === 0) {
-    return <LoadingPlaceholder />;
+    return <div className="text-center py-8">Loading volumes...</div>;
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5  gap-4">
       {volumes.map((volume, idx) => (
         <VolumeComponent
           key={`${volume.name}-${idx}`}
@@ -23,5 +23,4 @@ const VolumeList = ({ volumes, onDoubleClick }: Props) => {
     </div>
   );
 };
-
 export default VolumeList;
