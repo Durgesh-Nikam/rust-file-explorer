@@ -4,27 +4,11 @@
 
 mod filesystem;
 mod errors;
-use std::{ collections::HashMap, sync::{ Arc, Mutex } };
+mod state;
 
+use std::sync::{ Arc, Mutex };
 use filesystem::{ explorer::{ open_directory, open_file }, volume::get_volumes };
-use serde::{ Deserialize, Serialize };
-
-#[derive(Serialize, Deserialize)]
-pub struct CachedPath {
-    #[serde(rename = "p")]
-    file_path: String,
-    #[serde(rename = "t")]
-    file_type: String,
-}
-
-pub type VolumeCache = HashMap<String, Vec<CachedPath>>;
-
-#[derive(Default)]
-pub struct AppState {
-    system_cache: HashMap<String, VolumeCache>,
-}
-
-pub type SafeState = Arc<Mutex<AppState>>;
+use state::AppState;
 
 #[tokio::main]
 async fn main() {
