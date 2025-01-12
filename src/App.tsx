@@ -57,15 +57,13 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
-      <div className="mb-6 ">
-        <div className="flex justify-between items-center">
-          <img src="./images/disk/icon2.png" alt="Logo" className="h-12 w-12" />
+    <div className="min-h-screen bg-gray-900 text-gray-100">
+      <header className="bg-gray-800 p-4">
+        <div className="flex items-center">
           <SearchBar />
-          <div className="w-10"></div>
         </div>
-      </div>
-      <div>
+      </header>
+      <main className="p-6">
         {currentVolume === "" ? (
           <VolumeList volumes={volumes} onDoubleClick={handleVolumeClick} />
         ) : (
@@ -74,7 +72,7 @@ const App = () => {
             onDirectoryClick={handleDirectoryClick}
           />
         )}
-      </div>
+      </main>
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import { MouseEventHandler, useRef } from "react";
 import { DirectoryContentType } from "../../types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFile, faFolder } from "@fortawesome/free-solid-svg-icons";
+import { Folder, File } from "lucide-react";
 
 interface DirectoryEntityProps {
   name: string;
@@ -17,26 +16,22 @@ const DirectoryEntity = ({
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   return (
-    <div
-      title={name}
-      className="overflow-ellipsis whitespace-nowrap overflow-hidden"
-    >
+    <div className="text-center" title={name}>
       <button
         ref={buttonRef}
-        className="bg-gray-900 hover:bg-bright cursor-pointer w-full h-9 flex items-center"
         onDoubleClick={onDoubleClick}
+        className="w-full flex items-center rounded-lg bg-gray-800 p-3 transition-colors hover:bg-gray-700"
       >
-        <div className="mr-1 ml-1">
-          <FontAwesomeIcon
-            icon={type == "File" ? faFile : faFolder}
-            size="2x"
-            color={type == "File" ? "gray" : "#FFD54F"}
-          />
+        <div className="mr-3">
+          {type === "File" ? (
+            <File className="h-8 w-8 text-blue-400" />
+          ) : (
+            <Folder className="h-8 w-8 text-yellow-400" />
+          )}
         </div>
-        <span>{name}</span>
+        <span className="text-sm truncate text-left flex-grow">{name}</span>
       </button>
     </div>
   );
 };
-
 export default DirectoryEntity;
