@@ -84,46 +84,6 @@ impl Volume {
 
         (file_name, CachedPath { file_path, file_type })
     }
-
-    // fn create_cache(&self, state_mux: &SafeState) {
-    //     println!("Creating cache for volume: {}", self.name);
-    //     let start_time = Instant::now();
-
-    //     let state = &mut state_mux.lock().unwrap();
-
-    //     let volume = state.system_cache
-    //         .entry(self.mountpoint.to_string_lossy().to_string())
-    //         .or_insert_with(HashMap::new);
-
-    //     let system_cache = Arc::new(Mutex::new(volume));
-
-    //     WalkDir::new(self.mountpoint.clone())
-    //         .into_iter()
-    //         .par_bridge()
-    //         .filter_map(Result::ok)
-    //         .for_each(|entry| {
-    //             let file_name = entry.file_name().to_string_lossy().to_string();
-    //             let file_path = entry.path().to_string_lossy().to_string();
-
-    //             let walkdir_filetype = entry.file_type();
-    //             let file_type = (
-    //                 if walkdir_filetype.is_dir() {
-    //                     DIRECTORY
-    //                 } else {
-    //                     FILE
-    //                 }
-    //             ).to_string();
-
-    //             let cache_guard = &mut system_cache.lock().unwrap();
-    //             cache_guard
-    //                 .entry(file_name)
-    //                 .or_insert_with(Vec::new)
-    //                 .push(CachedPath { file_path, file_type });
-    //         });
-
-    //     let elapsed_time = start_time.elapsed();
-    //     println!("Cache creation for volume {} completed in {:.2?}", self.name, elapsed_time);
-    // }
 }
 
 pub struct VolumeManager;
@@ -156,38 +116,3 @@ pub async fn get_volumes(state_mux: State<'_, SafeState>) -> Result<Vec<Volume>,
     VolumeManager::process_volumes(&volumes, &state_mux);
     Ok(volumes)
 }
-// fn initialize_volume_cache(&self, state_mux: &SafeState) -> Arc<Mutex<&mut VolumeCache>> {
-//     let state = &mut state_mux.lock().unwrap();
-// }
-
-// #[tauri::command]
-// pub async fn get_volumes(state_mux: State<'_, SafeState>) -> Result<Vec<Volume>, ()> {
-//     let mut sys = System::new_all();
-//     sys.refresh_all();
-
-//     let mut cache_exists = fs::metadata(&CACHE_FILE_PATH[..]).is_ok();
-//     if cache_exists {
-//         cache_exists = load_system_cache(&state_mux);
-//     } else {
-//         File::create(&CACHE_FILE_PATH[..]).unwrap();
-//     }
-
-//     let volumes = sys
-//         .disks()
-//         .iter()
-//         .map(|disk| {
-//             let volume = Volume::from(disk);
-//             println!("{:?}", volume);
-
-//             if !cache_exists {
-//                 volume.create_cache(&state_mux);
-//             }
-
-//             volume
-//         })
-//         .collect();
-
-//     save_system_cache(&state_mux);
-
-//     Ok(volumes)
-// }
