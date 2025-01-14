@@ -3,9 +3,10 @@ import { ISearchFilter } from "./SearchBar";
 interface Props {
   filters: ISearchFilter;
   setFilters: React.Dispatch<React.SetStateAction<ISearchFilter>>;
+  onKeyDown: (e: React.KeyboardEvent) => void;
 }
 
-const SearchFilter = ({ filters, setFilters }: Props) => {
+const SearchFilter = ({ filters, setFilters, onKeyDown }: Props) => {
   return (
     <div className="absolute right-0 top-full mt-2 mr-11 w-72 rounded-lg bg-gray-700 p-4 shadow-lg">
       <div className="mb-2">
@@ -24,6 +25,7 @@ const SearchFilter = ({ filters, setFilters }: Props) => {
           onChange={(e) =>
             setFilters((prev) => ({ ...prev, extension: e.target.value }))
           }
+          onKeyDown={onKeyDown}
         />
       </div>
       <div className="flex items-center mb-2">

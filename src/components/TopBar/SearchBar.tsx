@@ -2,7 +2,7 @@ import { Search, X } from "lucide-react";
 import SearchFilter from "./SearchFilter";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { DirectoryContent } from "../../types";
-import { invoke } from "@tauri-apps/api";
+import { searchDirectory } from "../../ipc";
 
 interface Props {
   currentVolume: string;
@@ -49,16 +49,29 @@ const SearchBar = ({
       return;
     }
 
-    const results = await invoke<DirectoryContent[]>("search_directory", {
-      query: searchQuery,
-      searchDirectory: currentDirectoryPath,
-      mountPoint: currentVolume,
-      extension: searchFilter.extension,
-      acceptFiles: searchFilter.acceptFiles,
-      acceptDirectories: searchFilter.acceptDirectories,
-    });
+    // const results = await invoke<DirectoryContent[]>("search_directory", {
+    //   query: searchQuery,
+    //   searchDirectory: currentDirectoryPath,
+    //   mountPoint: currentVolume,
+    //   extension: searchFilter.extension,
+    //   acceptFiles: searchFilter.acceptFiles,
+    //   acceptDirectories: searchFilter.acceptDirectories,
+    // });
+
+    const results = await searchDirectory(
+      searchQuery,
+      currentDirectoryPath,
+      currentVolume,
+      searchFilter
+    );
 
     setSearchResults(results);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
@@ -74,12 +87,7 @@ const SearchBar = ({
           className="w-full bg-gray-700 px-3 py-2 text-sm focus:outline-none rounded"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              alert("searching");
-              handleSearch();
-            }
-          }}
+          onKeyDown={handleKeyDown}
         />
         <button
           className="ml-2 rounded bg-blue-600 px-3 py-2 text-sm font-medium hover:bg-blue-700"
@@ -101,7 +109,11 @@ const SearchBar = ({
       </button>
       <div>
         {showAdvancedSearch && isSearchExpanded && (
-          <SearchFilter filters={searchFilter} setFilters={setSeachFilter} />
+          <SearchFilter
+            filters={searchFilter}
+            setFilters={setSeachFilter}
+            onKeyDown={handleKeyDown}
+          />
         )}
       </div>
     </div>
