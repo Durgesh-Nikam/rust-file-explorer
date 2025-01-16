@@ -2,6 +2,7 @@ import { Search, X } from "lucide-react";
 import SearchFilter from "./SearchFilter";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { DirectoryContent } from "../../types";
+
 import { searchDirectory } from "../../ipc";
 
 interface Props {
@@ -49,15 +50,6 @@ const SearchBar = ({
       return;
     }
 
-    // const results = await invoke<DirectoryContent[]>("search_directory", {
-    //   query: searchQuery,
-    //   searchDirectory: currentDirectoryPath,
-    //   mountPoint: currentVolume,
-    //   extension: searchFilter.extension,
-    //   acceptFiles: searchFilter.acceptFiles,
-    //   acceptDirectories: searchFilter.acceptDirectories,
-    // });
-
     const results = await searchDirectory(
       searchQuery,
       currentDirectoryPath,
@@ -71,6 +63,7 @@ const SearchBar = ({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSearch();
+      setShowAdvancedSearch(false);
     }
   };
 
