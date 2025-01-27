@@ -15,19 +15,30 @@ import {
 } from "./store/slices/volumesSlice";
 import { getVolumes, openDirectory } from "./ipc";
 import { DirectoryContent } from "./types";
+import {
+  goBack,
+  goForward,
+  navigateTo,
+  selectCanGoBack,
+  selectCanGoForward,
+  selectCurrentPath,
+} from "./store/slices/navigationSlice";
+import FolderNavigation from "./components/FolderNavigation";
 
 const App = () => {
   const dispatch = useAppDispatch();
+
   const directoryContents = useAppSelector(selectDirectoryContents);
   const volumes = useAppSelector(selectVolumes);
   const currentVolume = useAppSelector(selectCurrentVolume);
+
+  const currentPath = useAppSelector(selectCurrentPath);
+  const canGoBack = useAppSelector(selectCanGoBack);
+  const canGoForward = useAppSelector(selectCanGoForward);
+
   const [searchResults, setSearchResults] = useState<DirectoryContent[]>([]);
-  const [currentDirectoryPath, setCurrentDirectoryPath] = useState("");
 
   useEffect(() => {
-    if (volumes.length > 0) {
-      return;
-    }
     const fetchVolumes = async () => {
       try {
         const newVolumes = await getVolumes();
@@ -37,26 +48,35 @@ const App = () => {
       }
     };
 
-    fetchVolumes();
-  }, []);
+    if (volumes.length === 0) fetchVolumes();
+  }, [dispatch, volumes.length]);
 
-  const handleVolumeClick = async (mountpoint: string) => {
+  useEffect(() => {
+    const updateContents = async () => {
+      try {
+        const contents = await openDirectory(currentPath);
+        dispatch(updateDirectoryContents(contents));
+      } catch (error) {
+        console.error("Failed to load directory contents: ", error);
+      }
+    };
+
+    if (currentPath !== "") updateContents();
+  }, [currentPath, dispatch]);
+
+  const handleVolumeClick = (mountpoint: string) => {
     try {
       dispatch(setCurrentVolume(mountpoint));
-      const contents = await openDirectory(mountpoint);
-      dispatch(updateDirectoryContents(contents));
-      setCurrentDirectoryPath(mountpoint);
+      dispatch(navigateTo(mountpoint));
       setSearchResults([]);
     } catch (error) {
       console.error("Failed to open volume: ", error);
     }
   };
 
-  const handleDirectoryClick = async (filePath: string) => {
+  const handleDirectoryClick = (filePath: string) => {
     try {
-      const contents = await openDirectory(filePath);
-      dispatch(updateDirectoryContents(contents));
-      setCurrentDirectoryPath(filePath);
+      dispatch(navigateTo(filePath));
       setSearchResults([]);
     } catch (error) {
       console.error("Failed to open directory: ", error);
@@ -65,17 +85,23 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
-      <header className="bg-gray-800 p-4">
-        <div className="flex items-center">
+      <header className="bg-gray-800 p-4 px-8">
+        <div className="flex items-center justify-between">
+          <FolderNavigation
+            onBack={() => dispatch(goBack())}
+            onForward={() => dispatch(goForward())}
+            canGoBack={canGoBack}
+            canGoForward={canGoForward}
+          ></FolderNavigation>
           <SearchBar
             currentVolume={currentVolume}
-            currentDirectoryPath={currentDirectoryPath}
+            currentDirectoryPath={currentPath}
             setSearchResults={setSearchResults}
           />
         </div>
       </header>
       <main className="p-6">
-        {currentVolume === "" ? (
+        {currentPath === "" ? (
           <VolumeList volumes={volumes} onDoubleClick={handleVolumeClick} />
         ) : (
           <DirectoryContents
