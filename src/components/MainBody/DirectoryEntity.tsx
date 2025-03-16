@@ -1,22 +1,30 @@
 import { MouseEventHandler, useRef } from "react";
-import { DirectoryContentType } from "../../types";
+import { DirectoryContentType, EntityContextPayload } from "../../types";
 import { Folder, File } from "lucide-react";
+import { useContextMenu } from "../../hooks/useContextMenu";
 
 interface DirectoryEntityProps {
   name: string;
   type: DirectoryContentType;
   onDoubleClick: MouseEventHandler<HTMLButtonElement>;
+  entity: EntityContextPayload;
 }
 
 const DirectoryEntity = ({
   name,
   type,
   onDoubleClick,
+  entity,
 }: DirectoryEntityProps) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const { handleEntityContext } = useContextMenu();
 
   return (
-    <div className="text-center" title={name}>
+    <div
+      className="text-center"
+      title={name}
+      onContextMenu={(e) => handleEntityContext(e, entity)}
+    >
       <button
         ref={buttonRef}
         onDoubleClick={onDoubleClick}

@@ -24,9 +24,12 @@ import {
   selectCurrentPath,
 } from "./store/slices/navigationSlice";
 import FolderNavigation from "./components/FolderNavigation";
+import { useContextMenu } from "./hooks/useContextMenu";
+import ContextMenuManager from "./components/ContextMenu/ContextMenuManager";
 
 const App = () => {
   const dispatch = useAppDispatch();
+  const { hideContextMenu, handleMainContext } = useContextMenu();
 
   const directoryContents = useAppSelector(selectDirectoryContents);
   const volumes = useAppSelector(selectVolumes);
@@ -84,7 +87,12 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+    <div
+      className="min-h-screen bg-gray-900 text-gray-100"
+      onClick={hideContextMenu}
+      onContextMenu={handleMainContext}
+    >
+      <ContextMenuManager />
       <header className="bg-gray-800 p-4 px-8">
         <div className="flex items-center justify-between">
           <FolderNavigation
