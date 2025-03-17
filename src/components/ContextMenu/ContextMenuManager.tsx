@@ -4,6 +4,7 @@ import { ContextMenuType, EntityContextPayload } from "../../types";
 import ContextMenu from "./ContextMenu";
 import { useFileActions } from "../../hooks/useFileActions";
 import InputModal from "../InputModal";
+import { useContextMenu } from "../../hooks/useContextMenu";
 
 const ContextMenuManager = () => {
   const { type, position, payload } = useAppSelector(
@@ -12,6 +13,7 @@ const ContextMenuManager = () => {
   const [showCreateFile, setShowCreateFile] = useState(false);
   const [showCreateFolder, setShowCreateFolder] = useState(false);
   const [showRename, setShowRename] = useState(false);
+  const { hideContextMenu } = useContextMenu();
 
   const {
     handleCreateFile,
@@ -63,29 +65,36 @@ const ContextMenuManager = () => {
       <ContextMenu
         items={getMenuItems()}
         position={position}
-        onClose={() => {}}
+        onClose={hideContextMenu}
       />
 
       <InputModal
         visible={showCreateFile}
         onClose={() => setShowCreateFile(false)}
-        onSubmit={handleCreateFile}
+        onSubmit={(name) => {
+          handleCreateFile(name);
+          hideContextMenu();
+        }}
         title="Create New File"
       />
 
       <InputModal
         visible={showCreateFolder}
         onClose={() => setShowCreateFolder(false)}
-        onSubmit={handleCreateDirectory}
+        onSubmit={(name) => {
+          handleCreateDirectory(name);
+          hideContextMenu();
+        }}
         title="Create New Folder"
       />
 
       <InputModal
         visible={showRename}
         onClose={() => setShowRename(false)}
-        onSubmit={(newName: string) =>
-          handleRename(payload as EntityContextPayload, newName)
-        }
+        onSubmit={(newName: string) => {
+          handleRename(payload as EntityContextPayload, newName);
+          hideContextMenu();
+        }}
         title="Rename"
         initialValue={(payload as EntityContextPayload)?.name || ""}
       />

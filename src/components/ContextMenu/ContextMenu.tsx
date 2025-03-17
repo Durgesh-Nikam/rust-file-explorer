@@ -10,8 +10,17 @@ type ContextMenuProps = {
 const ContextMenu = ({ items, position, onClose }: ContextMenuProps) => {
   useEffect(() => {
     const handleClick = () => onClose();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+
     window.addEventListener("click", handleClick);
-    return () => window.removeEventListener("click", handleClick);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("click", handleClick);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [onClose]);
 
   return (

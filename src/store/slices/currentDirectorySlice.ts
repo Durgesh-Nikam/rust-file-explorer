@@ -18,10 +18,14 @@ export const currentDirectorySlice = createSlice({
     ) => {
       state.contents = action.payload;
     },
+    addContent: (state, action: PayloadAction<DirectoryContent>) => {
+      state.contents = [action.payload, ...state.contents];
+    },
   },
 });
 
-export const { updateDirectoryContents } = currentDirectorySlice.actions;
+export const { updateDirectoryContents, addContent } =
+  currentDirectorySlice.actions;
 export const selectDirectoryContents = (state: RootState) =>
   state.currentDirectory.contents;
 export default currentDirectorySlice.reducer;

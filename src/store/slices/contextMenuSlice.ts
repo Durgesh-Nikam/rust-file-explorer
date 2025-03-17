@@ -22,13 +22,12 @@ const contextMenuSlice = createSlice({
   initialState,
   reducers: {
     updateContextMenu: (state, action: PayloadAction<ContextMenuState>) => {
-      state.type = action.payload.type;
-      state.position = action.payload.position;
-      state.payload = action.payload.payload;
-      // return {
-      //   ...initialState,
-      //   ...action.payload,
-      // };
+      return {
+        ...state,
+        type: action.payload.type,
+        position: action.payload.position,
+        payload: action.payload.payload,
+      };
     },
   },
 });
