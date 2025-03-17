@@ -1,7 +1,7 @@
 use std::{
     collections::HashMap,
-    fs::{ self, File },
-    io::{ BufReader, Write },
+    fs::{self, File},
+    io::{BufReader, Write},
     path::Path,
     sync::MutexGuard,
     time::Instant,
@@ -9,7 +9,7 @@ use std::{
 
 use lazy_static::lazy_static;
 
-use crate::state::{ AppState, SafeState, VolumeCache };
+use crate::state::{AppState, SafeState, VolumeCache};
 
 lazy_static! {
     pub static ref CACHE_FILE_PATH: String = Cache::get_cache_file_path();
@@ -58,7 +58,7 @@ impl Cache {
     fn update_state_cache(
         state: &mut MutexGuard<AppState>,
         system_cache: HashMap<String, VolumeCache>,
-        start_time: Instant
+        start_time: Instant,
     ) {
         println!("Starting Cache deserialization");
         state.system_cache = system_cache;
@@ -84,7 +84,8 @@ impl Cache {
     fn write_cache_to_file(serialized_cache: &str) {
         let compressed = Self::compress_cache(serialized_cache);
         let mut file = Self::open_cache_file();
-        file.write_all(&compressed).expect("Failed to write cache to file");
+        file.write_all(&compressed)
+            .expect("Failed to write cache to file");
     }
 
     fn compress_cache(serialized_cache: &str) -> Vec<u8> {
@@ -92,8 +93,7 @@ impl Cache {
     }
 
     fn open_cache_file() -> File {
-        fs::OpenOptions
-            ::new()
+        fs::OpenOptions::new()
             .write(true)
             .truncate(true)
             .open(&*CACHE_FILE_PATH)

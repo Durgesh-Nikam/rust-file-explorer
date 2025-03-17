@@ -1,11 +1,11 @@
-use std::{ path::Path, time::Instant };
+use std::{path::Path, time::Instant};
 
-use fuzzy_matcher::{ skim::SkimMatcherV2, FuzzyMatcher };
+use fuzzy_matcher::{skim::SkimMatcherV2, FuzzyMatcher};
 use tauri::State;
 
 use crate::{
-    filesystem::{ volume::DirectoryChild, DIRECTORY, FILE },
-    state::{ SafeState, VolumeCache },
+    filesystem::{volume::DirectoryChild, DIRECTORY, FILE},
+    state::{SafeState, VolumeCache},
 };
 
 const MINIMUM_SCORE: i16 = 20;
@@ -42,7 +42,9 @@ impl SearchEngine {
         if filename == self.config.query {
             return EXACT_MATCH_SCORE;
         }
-        self.matcher.fuzzy_match(filename, &self.config.query).unwrap_or(0) as i16
+        self.matcher
+            .fuzzy_match(filename, &self.config.query)
+            .unwrap_or(0) as i16
     }
 
     fn check_extension(&self, filename: &str) -> bool {
@@ -108,10 +110,7 @@ impl SearchEngine {
 
     fn get_sorted_results(mut self) -> Vec<DirectoryChild> {
         self.results.sort_by(|a, b| b.score.cmp(&a.score));
-        self.results
-            .into_iter()
-            .map(|r| r.item)
-            .collect()
+        self.results.into_iter().map(|r| r.item).collect()
     }
 }
 
@@ -123,7 +122,7 @@ pub async fn search_directory(
     mount_point: String,
     extension: String,
     accept_files: bool,
-    accept_directories: bool
+    accept_directories: bool,
 ) -> Result<Vec<DirectoryChild>, ()> {
     let start_time = Instant::now();
 
@@ -135,7 +134,10 @@ pub async fn search_directory(
         accept_directories,
     };
 
-    println!("Starting the Search for {} in {}", config.query, config.search_directory);
+    println!(
+        "Starting the Search for {} in {}",
+        config.query, config.search_directory
+    );
     let mut search_engine = SearchEngine::new(config);
 
     {
