@@ -32,8 +32,7 @@ export type ContextMenuPosition = {
 };
 
 export type EntityContextPayload = {
-  id: string;
   path: string;
   name: string;
-  type: "file" | "directory";
+  type: DirectoryContentType;
 };

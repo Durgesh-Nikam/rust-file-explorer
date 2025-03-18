@@ -20,14 +20,11 @@ const DirectoryEntity = ({
   const { handleEntityContext } = useContextMenu();
 
   return (
-    <div
-      className="text-center"
-      title={name}
-      onContextMenu={(e) => handleEntityContext(e, entity)}
-    >
+    <div className="text-center" title={name}>
       <button
         ref={buttonRef}
         onDoubleClick={onDoubleClick}
+        onContextMenu={(e) => handleEntityContext(e, entity)}
         className="w-full flex items-center rounded-lg bg-gray-800 p-3 transition-colors hover:bg-gray-700"
       >
         <div className="mr-3">

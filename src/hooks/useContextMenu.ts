@@ -43,8 +43,9 @@ export const useContextMenu = () => {
   const handleEntityContext = useCallback(
     (e: React.MouseEvent, entity: EntityContextPayload) => {
       e.preventDefault();
+      e.stopPropagation();
       showContextMenu(
-        entity.type === "file"
+        entity.type === "File"
           ? ContextMenuType.FileEntity
           : ContextMenuType.DirectoryEntity,
         { x: e.clientX, y: e.clientY },
