@@ -8,7 +8,7 @@ mod search;
 mod state;
 
 use filesystem::{
-    explorer::{create_directory, delete_directory, open_directory, open_file},
+    explorer::{create_directory, create_file, delete_directory, open_directory, open_file},
     volume::get_volumes,
 };
 use search::search_directory;
@@ -20,8 +20,9 @@ async fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             get_volumes,
-            open_directory,
             open_file,
+            create_file,
+            open_directory,
             create_directory,
             search_directory,
             delete_directory

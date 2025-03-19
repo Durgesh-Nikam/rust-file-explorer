@@ -78,3 +78,16 @@ pub async fn open_file(path: String) -> Result<(), Error> {
         .unwrap_or(String::from("Failed to open file and deserialize stderr."));
     Err(Error::Custom(err_msg))
 }
+
+#[tauri::command]
+pub async fn create_file(state_mux: State<'_, SafeState>, path: String) -> Result<(), Error> {
+    let mount_point_str = fs_utils::get_mount_point(&path).unwrap_or_default();
+
+    let fs_event_manager = FsEventHandler::new(state_mux.deref().clone(), mount_point_str.into());
+    fs_event_manager.handle_create(CreateKind::File, Path::new(&path));
+
+    match fs::File::create(&path) {
+        Ok(_) => Ok(()),
+        Err(err) => Err(Error::Custom(err.to_string())),
+    }
+}

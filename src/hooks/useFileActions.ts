@@ -1,4 +1,4 @@
-import { createDirectory, deleteDirectory } from "../ipc";
+import { createDirectory, createFile, deleteDirectory } from "../ipc";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import {
   addContent,
@@ -14,9 +14,10 @@ export const useFileActions = () => {
 
   const handleCreateFile = async (name: string) => {
     try {
-      // const path = `${currentPath}/${name}`;
-      // await createFile(path);
-      // dispatch(addContent({ type: "file", name, path }));
+      const path = `${currentPath}/${name}`;
+      await createFile(path);
+      const newFileContent = createDirectoryContent("File", name, path);
+      dispatch(addContent(newFileContent));
       console.log("Creating file:", name);
     } catch (error) {
       console.error("File creation failed:", error);

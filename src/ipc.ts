@@ -20,6 +20,10 @@ export const openFile = async (path: string): Promise<void> => {
   return invoke<void>("open_file", { path });
 };
 
+export const createFile = async (path: string): Promise<void> => {
+  return invoke<void>("create_file", { path });
+};
+
 export const getVolumes = async (): Promise<Volume[]> => {
   return invoke("get_volumes");
 };
