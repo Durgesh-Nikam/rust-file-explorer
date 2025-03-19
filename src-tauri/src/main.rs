@@ -8,7 +8,7 @@ mod search;
 mod state;
 
 use filesystem::{
-    explorer::{create_directory, open_directory, open_file},
+    explorer::{create_directory, delete_directory, open_directory, open_file},
     volume::get_volumes,
 };
 use search::search_directory;
@@ -23,7 +23,8 @@ async fn main() {
             open_directory,
             open_file,
             create_directory,
-            search_directory
+            search_directory,
+            delete_directory
         ])
         .manage(Arc::new(Mutex::new(AppState::default())))
         .run(tauri::generate_context!())

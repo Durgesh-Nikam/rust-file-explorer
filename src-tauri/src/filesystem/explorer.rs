@@ -47,6 +47,19 @@ pub async fn create_directory(state_mux: State<'_, SafeState>, path: String) -> 
 }
 
 #[tauri::command]
+pub async fn delete_directory(state_mux: State<'_, SafeState>, path: String) -> Result<(), Error> {
+    let mount_point_str = fs_utils::get_mount_point(&path).unwrap_or_default();
+
+    let fs_event_manager = FsEventHandler::new(state_mux.deref().clone(), mount_point_str.into());
+    fs_event_manager.handle_delete(Path::new(&path));
+
+    match fs::remove_dir_all(&path) {
+        Ok(_) => Ok(()),
+        Err(err) => Err(Error::Custom(err.to_string())),
+    }
+}
+
+#[tauri::command]
 pub async fn open_file(path: String) -> Result<(), Error> {
     let output_res = open::commands(path)[0].output();
     let output = match output_res {
