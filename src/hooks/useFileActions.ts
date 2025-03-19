@@ -1,6 +1,9 @@
-import { createDirectory } from "../ipc";
+import { createDirectory, deleteDirectory } from "../ipc";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { addContent } from "../store/slices/currentDirectorySlice";
+import {
+  addContent,
+  deleteContent,
+} from "../store/slices/currentDirectorySlice";
 import { selectCurrentPath } from "../store/slices/navigationSlice";
 import { EntityContextPayload } from "../types";
 import { createDirectoryContent } from "../utils";
@@ -55,13 +58,18 @@ export const useFileActions = () => {
     }
   };
 
-  const handleDelete = async (entity: EntityContextPayload) => {
+  const handleDeleteDirectory = async (entity: EntityContextPayload) => {
     const confirmed = await confirm(`Delete ${entity.name}?`);
     if (!confirmed) return;
 
     try {
-      // await deleteFile(entity.path);
-      // dispatch(deleteContent(entity.path));
+      await deleteDirectory(entity.path);
+      const content = createDirectoryContent(
+        entity.type,
+        entity.name,
+        entity.path
+      );
+      dispatch(deleteContent(content));
       console.log("Deleting file:", entity.name);
     } catch (error) {
       console.error("Deletion failed:", error);
@@ -72,6 +80,6 @@ export const useFileActions = () => {
     handleCreateFile,
     handleCreateDirectory,
     handleRename,
-    handleDelete,
+    handleDeleteDirectory,
   };
 };

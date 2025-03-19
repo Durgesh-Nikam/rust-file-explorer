@@ -11,6 +11,11 @@ export const openDirectory = async (
 export const createDirectory = async (path: string): Promise<string> => {
   return invoke<string>("create_directory", { path });
 };
+
+export const deleteDirectory = async (path: string): Promise<string> => {
+  return invoke<string>("delete_directory", { path });
+};
+
 export const openFile = async (path: string): Promise<void> => {
   return invoke<void>("open_file", { path });
 };

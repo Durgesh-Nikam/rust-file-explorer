@@ -19,7 +19,7 @@ const ContextMenuManager = () => {
     handleCreateFile,
     handleCreateDirectory,
     handleRename,
-    handleDelete,
+    handleDeleteDirectory,
   } = useFileActions();
 
   const getMenuItems = () => {
@@ -48,7 +48,7 @@ const ContextMenuManager = () => {
           },
           {
             label: "Delete",
-            action: () => handleDelete(entity),
+            action: () => handleDeleteDirectory(entity),
             icon: "🗑️",
             danger: true,
           },
