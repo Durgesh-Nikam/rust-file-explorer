@@ -24,6 +24,7 @@ import {
   selectCurrentPath,
 } from "./store/slices/navigationSlice";
 import FolderNavigation from "./components/FolderNavigation";
+import PathBar from "./components/PathBar";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -112,6 +113,7 @@ const App = () => {
           />
         )}
       </main>
+      <PathBar currentPath={currentPath} />
     </div>
   );
 };
