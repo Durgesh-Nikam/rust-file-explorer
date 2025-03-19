@@ -26,6 +26,7 @@ import {
 import FolderNavigation from "./components/FolderNavigation";
 import { useContextMenu } from "./hooks/useContextMenu";
 import ContextMenuManager from "./components/ContextMenu/ContextMenuManager";
+import PathBar from "./components/PathBar";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -120,6 +121,7 @@ const App = () => {
           />
         )}
       </main>
+      <PathBar currentPath={currentPath} />
     </div>
   );
 };
