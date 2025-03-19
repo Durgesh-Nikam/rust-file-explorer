@@ -91,3 +91,16 @@ pub async fn create_file(state_mux: State<'_, SafeState>, path: String) -> Resul
         Err(err) => Err(Error::Custom(err.to_string())),
     }
 }
+
+#[tauri::command]
+pub async fn delete_file(state_mux: State<'_, SafeState>, path: String) -> Result<(), Error> {
+    let mount_point_str = fs_utils::get_mount_point(&path).unwrap_or_default();
+
+    let fs_event_manager = FsEventHandler::new(state_mux.deref().clone(), mount_point_str.into());
+    fs_event_manager.handle_delete(Path::new(&path));
+
+    match fs::remove_file(&path) {
+        Ok(_) => Ok(()),
+        Err(err) => Err(Error::Custom(err.to_string())),
+    }
+}

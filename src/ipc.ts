@@ -24,6 +24,10 @@ export const createFile = async (path: string): Promise<void> => {
   return invoke<void>("create_file", { path });
 };
 
+export const deleteFile = async (path: string): Promise<void> => {
+  return invoke<void>("delete_file", { path });
+};
+
 export const getVolumes = async (): Promise<Volume[]> => {
   return invoke("get_volumes");
 };

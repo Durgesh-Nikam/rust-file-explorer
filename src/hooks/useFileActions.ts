@@ -1,4 +1,9 @@
-import { createDirectory, createFile, deleteDirectory } from "../ipc";
+import {
+  createDirectory,
+  createFile,
+  deleteDirectory,
+  deleteFile,
+} from "../ipc";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import {
   addContent,
@@ -77,10 +82,29 @@ export const useFileActions = () => {
     }
   };
 
+  const handleDeleteFile = async (entity: EntityContextPayload) => {
+    const confirmed = await confirm(`Delete ${entity.name}?`);
+    if (!confirmed) return;
+
+    try {
+      await deleteFile(entity.path);
+      const content = createDirectoryContent(
+        entity.type,
+        entity.name,
+        entity.path
+      );
+      dispatch(deleteContent(content));
+      console.log("Deleting file:", entity.name);
+    } catch (error) {
+      console.error("Deletion failed:", error);
+    }
+  };
+
   return {
     handleCreateFile,
     handleCreateDirectory,
     handleRename,
     handleDeleteDirectory,
+    handleDeleteFile,
   };
 };

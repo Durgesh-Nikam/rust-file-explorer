@@ -20,6 +20,7 @@ const ContextMenuManager = () => {
     handleCreateDirectory,
     handleRename,
     handleDeleteDirectory,
+    handleDeleteFile,
   } = useFileActions();
 
   const getMenuItems = () => {
@@ -38,8 +39,7 @@ const ContextMenuManager = () => {
           },
         ];
       case ContextMenuType.FileEntity:
-      case ContextMenuType.DirectoryEntity:
-        const entity = payload as EntityContextPayload;
+        const fileEntity = payload as EntityContextPayload;
         return [
           {
             label: "Rename",
@@ -48,7 +48,22 @@ const ContextMenuManager = () => {
           },
           {
             label: "Delete",
-            action: () => handleDeleteDirectory(entity),
+            action: () => handleDeleteFile(fileEntity),
+            icon: "🗑️",
+            danger: true,
+          },
+        ];
+      case ContextMenuType.DirectoryEntity:
+        const directoryEntity = payload as EntityContextPayload;
+        return [
+          {
+            label: "Rename",
+            action: () => setShowRename(true),
+            icon: "✏️",
+          },
+          {
+            label: "Delete",
+            action: () => handleDeleteDirectory(directoryEntity),
             icon: "🗑️",
             danger: true,
           },

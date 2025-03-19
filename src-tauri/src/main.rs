@@ -8,7 +8,9 @@ mod search;
 mod state;
 
 use filesystem::{
-    explorer::{create_directory, create_file, delete_directory, open_directory, open_file},
+    explorer::{
+        create_directory, create_file, delete_directory, delete_file, open_directory, open_file,
+    },
     volume::get_volumes,
 };
 use search::search_directory;
@@ -22,6 +24,7 @@ async fn main() {
             get_volumes,
             open_file,
             create_file,
+            delete_file,
             open_directory,
             create_directory,
             search_directory,
