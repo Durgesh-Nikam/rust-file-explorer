@@ -12,13 +12,11 @@ const ContextMenuManager = () => {
   );
   const [showCreateFile, setShowCreateFile] = useState(false);
   const [showCreateFolder, setShowCreateFolder] = useState(false);
-  const [showRename, setShowRename] = useState(false);
   const { hideContextMenu } = useContextMenu();
 
   const {
     handleCreateFile,
     handleCreateDirectory,
-    handleRename,
     handleDeleteDirectory,
     handleDeleteFile,
   } = useFileActions();
@@ -42,11 +40,6 @@ const ContextMenuManager = () => {
         const fileEntity = payload as EntityContextPayload;
         return [
           {
-            label: "Rename",
-            action: () => setShowRename(true),
-            icon: "✏️",
-          },
-          {
             label: "Delete",
             action: () => handleDeleteFile(fileEntity),
             icon: "🗑️",
@@ -56,11 +49,6 @@ const ContextMenuManager = () => {
       case ContextMenuType.DirectoryEntity:
         const directoryEntity = payload as EntityContextPayload;
         return [
-          {
-            label: "Rename",
-            action: () => setShowRename(true),
-            icon: "✏️",
-          },
           {
             label: "Delete",
             action: () => handleDeleteDirectory(directoryEntity),
@@ -101,17 +89,6 @@ const ContextMenuManager = () => {
           hideContextMenu();
         }}
         title="Create New Folder"
-      />
-
-      <InputModal
-        visible={showRename}
-        onClose={() => setShowRename(false)}
-        onSubmit={(newName: string) => {
-          handleRename(payload as EntityContextPayload, newName);
-          hideContextMenu();
-        }}
-        title="Rename"
-        initialValue={(payload as EntityContextPayload)?.name || ""}
       />
     </>
   );

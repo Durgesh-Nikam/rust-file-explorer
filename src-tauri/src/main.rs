@@ -1,6 +1,6 @@
 // // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 //! Removing this line at the moment for logging purpose during development
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+// #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod errors;
 mod filesystem;

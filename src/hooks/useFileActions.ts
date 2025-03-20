@@ -47,23 +47,6 @@ export const useFileActions = () => {
     }
   };
 
-  const handleRename = async (
-    entity: EntityContextPayload,
-    newName: string
-  ) => {
-    try {
-      // const newPath = `${entity.path
-      //   .split("/")
-      //   .slice(0, -1)
-      //   .join("/")}/${newName}`;
-      // await renameFile(entity.path, newPath);
-      // dispatch(renameContent({ oldPath: entity.path, newPath }));
-      console.log("Renaming file:", entity.name, "to", newName);
-    } catch (error) {
-      console.error("Rename failed:", error);
-    }
-  };
-
   const handleDeleteDirectory = async (entity: EntityContextPayload) => {
     const confirmed = await confirm(`Delete ${entity.name}?`);
     if (!confirmed) return;
@@ -103,7 +86,6 @@ export const useFileActions = () => {
   return {
     handleCreateFile,
     handleCreateDirectory,
-    handleRename,
     handleDeleteDirectory,
     handleDeleteFile,
   };
