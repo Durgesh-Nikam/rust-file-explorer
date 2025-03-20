@@ -36,6 +36,11 @@ const DirectoryContents = ({
                 ? onDirectoryClick(filePath)
                 : onFileClick(filePath)
             }
+            entity={{
+              name: fileName,
+              type: fileType as DirectoryContentType,
+              path: filePath,
+            }}
           />
         );
       })}

@@ -1,24 +1,35 @@
 // // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 //! Removing this line at the moment for logging purpose during development
-// #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod filesystem;
 mod errors;
-mod state;
+mod filesystem;
 mod search;
+mod state;
 
-use std::sync::{ Arc, Mutex };
-use filesystem::{ explorer::{ open_directory, open_file }, volume::get_volumes };
+use filesystem::{
+    explorer::{
+        create_directory, create_file, delete_directory, delete_file, open_directory, open_file,
+    },
+    volume::get_volumes,
+};
 use search::search_directory;
 use state::AppState;
+use std::sync::{Arc, Mutex};
 
 #[tokio::main]
 async fn main() {
-    tauri::Builder
-        ::default()
-        .invoke_handler(
-            tauri::generate_handler![get_volumes, open_directory, open_file, search_directory]
-        )
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![
+            get_volumes,
+            open_file,
+            create_file,
+            delete_file,
+            open_directory,
+            create_directory,
+            search_directory,
+            delete_directory
+        ])
         .manage(Arc::new(Mutex::new(AppState::default())))
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

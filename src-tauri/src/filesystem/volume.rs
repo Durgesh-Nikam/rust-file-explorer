@@ -1,13 +1,16 @@
-use rayon::iter::{ ParallelBridge, ParallelIterator };
-use serde::{ Deserialize, Serialize };
+use rayon::iter::{ParallelBridge, ParallelIterator};
+use serde::{Deserialize, Serialize};
+use std::{collections::HashMap, path::PathBuf, time::Instant};
+use sysinfo::{Disk, DiskExt, System, SystemExt};
 use tauri::State;
 use walkdir::WalkDir;
-use std::{ collections::HashMap, path::PathBuf, time::Instant };
-use sysinfo::{ Disk, DiskExt, System, SystemExt };
 
-use crate::{ filesystem::bytes_to_gb, state::{ CachedPath, SafeState } };
+use crate::{
+    filesystem::bytes_to_gb,
+    state::{CachedPath, SafeState},
+};
 
-use super::{ cache::Cache, DIRECTORY, FILE };
+use super::{cache::Cache, DIRECTORY, FILE};
 
 #[derive(Serialize, Debug)]
 pub struct Volume {
@@ -43,7 +46,11 @@ impl Volume {
     }
 
     fn format_volume_name(volume_name: &str) -> String {
-        if volume_name.is_empty() { "Local Volume".to_string() } else { volume_name.to_string() }
+        if volume_name.is_empty() {
+            "Local Volume".to_string()
+        } else {
+            volume_name.to_string()
+        }
     }
 
     pub fn create_cache(&self, state_mux: &SafeState) {
@@ -54,7 +61,10 @@ impl Volume {
         self.store_entries_in_cache(entries, state_mux);
 
         let elapsed_time = start_time.elapsed();
-        println!("Cache creation for volume {} completed in {:.2?}", self.name, elapsed_time);
+        println!(
+            "Cache creation for volume {} completed in {:.2?}",
+            self.name, elapsed_time
+        );
     }
 
     fn collect_filesystem_entries(&self) -> Vec<(String, CachedPath)> {
@@ -68,21 +78,36 @@ impl Volume {
 
     fn store_entries_in_cache(&self, entries: Vec<(String, CachedPath)>, state_mux: &SafeState) {
         let mut state = state_mux.lock().unwrap();
-        let volume_cache = state.system_cache
+        let volume_cache = state
+            .system_cache
             .entry(self.mountpoint.to_string_lossy().to_string())
             .or_insert_with(HashMap::new);
 
         for (file_name, cached_path) in entries {
-            volume_cache.entry(file_name).or_insert_with(Vec::new).push(cached_path);
+            volume_cache
+                .entry(file_name)
+                .or_insert_with(Vec::new)
+                .push(cached_path);
         }
     }
 
     fn create_cache_entry(&self, entry: &walkdir::DirEntry) -> (String, CachedPath) {
         let file_name = entry.file_name().to_string_lossy().to_string();
         let file_path = entry.path().to_string_lossy().to_string();
-        let file_type = (if entry.file_type().is_dir() { DIRECTORY } else { FILE }).to_string();
+        let file_type = (if entry.file_type().is_dir() {
+            DIRECTORY
+        } else {
+            FILE
+        })
+        .to_string();
 
-        (file_name, CachedPath { file_path, file_type })
+        (
+            file_name,
+            CachedPath {
+                file_path,
+                file_type,
+            },
+        )
     }
 }
 
