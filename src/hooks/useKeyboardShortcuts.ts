@@ -5,6 +5,7 @@ import { goBack, goForward } from "../store/slices/navigationSlice";
 import { useFileActions } from "./useFileActions";
 import { useContextMenu } from "./useContextMenu";
 import { ContextMenuType } from "../types";
+import { useClipboard } from "./useClipboard";
 
 export const useKeyboardShortcuts = () => {
   const dispatch = useAppDispatch();
@@ -12,14 +13,21 @@ export const useKeyboardShortcuts = () => {
   const { handleCreateFile, handleCreateDirectory } = useFileActions();
   const { showContextMenu, hideContextMenu } = useContextMenu();
   const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
+  const [showSearchBar, setShowSearchBar] = useState(false);
+
+  // Get clipboard operations
+  const { clipboardItem, copyToClipboard, cutToClipboard, pasteFromClipboard } =
+    useClipboard();
+
+  // Track currently selected entity for clipboard operations
+  const [selectedEntity, setSelectedEntity] = useState<any>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't trigger shortcuts when typing in input fields
       if (
         e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement ||
-        e.metaKey // Don't interfere with browser shortcuts (Cmd/Ctrl+S, etc.)
+        e.target instanceof HTMLTextAreaElement
       ) {
         return;
       }
@@ -28,6 +36,13 @@ export const useKeyboardShortcuts = () => {
       if (e.key === "?" || (e.shiftKey && e.key === "/")) {
         e.preventDefault();
         setShowShortcutsHelp((prev) => !prev);
+        return;
+      }
+
+      // Toggle search with Ctrl+K
+      if (e.ctrlKey && e.key === "k") {
+        e.preventDefault();
+        setShowSearchBar((prev) => !prev);
         return;
       }
 
@@ -58,6 +73,27 @@ export const useKeyboardShortcuts = () => {
           if (folderName) handleCreateDirectory(folderName);
         }
 
+        // Clipboard operations
+        if (selectedEntity) {
+          // Copy (Ctrl+C)
+          if (e.ctrlKey && e.key === "c") {
+            e.preventDefault();
+            copyToClipboard(selectedEntity);
+          }
+
+          // Cut (Ctrl+X)
+          if (e.ctrlKey && e.key === "x") {
+            e.preventDefault();
+            cutToClipboard(selectedEntity);
+          }
+        }
+
+        // Paste (Ctrl+V)
+        if (e.ctrlKey && e.key === "v") {
+          e.preventDefault();
+          pasteFromClipboard();
+        }
+
         // Context menu (Shift+F10 or context menu key)
         if (e.key === "ContextMenu" || (e.shiftKey && e.key === "F10")) {
           e.preventDefault();
@@ -80,10 +116,13 @@ export const useKeyboardShortcuts = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentPath, dispatch, showShortcutsHelp]);
+  }, [currentPath, dispatch, showShortcutsHelp, selectedEntity]);
 
   return {
     showShortcutsHelp,
     setShowShortcutsHelp,
+    showSearchBar,
+    setShowSearchBar,
+    setSelectedEntity,
   };
 };
