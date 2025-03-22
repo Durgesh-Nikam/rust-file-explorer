@@ -18,6 +18,10 @@ const ShortcutsHelpDialog = ({ isOpen, onClose }: ShortcutHelpProps) => {
     { keys: "Esc", description: "Close menus and dialogs" },
     { keys: "Shift + F10", description: "Open context menu" },
     { keys: "?", description: "Show/hide keyboard shortcuts" },
+    { keys: "Ctrl + C", description: "Copy selected item" },
+    { keys: "Ctrl + X", description: "Cut selected item" },
+    { keys: "Ctrl + V", description: "Paste from clipboard" },
+    { keys: "Ctrl + K", description: "Focus search bar" },
   ];
 
   return (
@@ -30,7 +34,7 @@ const ShortcutsHelpDialog = ({ isOpen, onClose }: ShortcutHelpProps) => {
           </button>
         </div>
 
-        <div className="divide-y divide-gray-700">
+        <div className="divide-y divide-gray-700 max-h-96 overflow-y-auto">
           {shortcuts.map((shortcut, index) => (
             <div key={index} className="py-2 flex justify-between">
               <span className="font-mono bg-gray-700 px-2 py-1 rounded text-sm">

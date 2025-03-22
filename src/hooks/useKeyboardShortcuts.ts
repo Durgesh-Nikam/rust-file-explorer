@@ -5,22 +5,29 @@ import { goBack, goForward } from "../store/slices/navigationSlice";
 import { useFileActions } from "./useFileActions";
 import { useContextMenu } from "./useContextMenu";
 import { ContextMenuType } from "../types";
+import { EntityContextPayload } from "../types";
 import { useClipboard } from "./useClipboard";
+import { InputModalManager } from "../components/InputModalManager";
 
 export const useKeyboardShortcuts = () => {
   const dispatch = useAppDispatch();
   const currentPath = useAppSelector(selectCurrentPath);
-  const { handleCreateFile, handleCreateDirectory } = useFileActions();
   const { showContextMenu, hideContextMenu } = useContextMenu();
   const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const [selectedEntity, setSelectedEntity] =
+    useState<EntityContextPayload | null>(null);
 
-  // Get clipboard operations
-  const { clipboardItem, copyToClipboard, cutToClipboard, pasteFromClipboard } =
+  // Reference to fileActions to avoid circular dependency
+  const fileActions = useFileActions();
+
+  // Get clipboard functionality
+  const { copyToClipboard, cutToClipboard, pasteFromClipboard } =
     useClipboard();
 
-  // Track currently selected entity for clipboard operations
-  const [selectedEntity, setSelectedEntity] = useState<any>(null);
+  // File/folder creation modal states
+  const [showCreateFileModal, setShowCreateFileModal] = useState(false);
+  const [showCreateFolderModal, setShowCreateFolderModal] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -60,17 +67,15 @@ export const useKeyboardShortcuts = () => {
       // File operation shortcuts (only when in a directory)
       if (currentPath) {
         // New file (Ctrl+N)
-        if (e.ctrlKey && e.key === "n") {
+        if (e.ctrlKey && e.key === "n" && !e.shiftKey) {
           e.preventDefault();
-          const fileName = prompt("Enter file name:");
-          if (fileName) handleCreateFile(fileName);
+          setShowCreateFileModal(true);
         }
 
         // New folder (Ctrl+Shift+N)
         if (e.ctrlKey && e.shiftKey && e.key === "N") {
           e.preventDefault();
-          const folderName = prompt("Enter folder name:");
-          if (folderName) handleCreateDirectory(folderName);
+          setShowCreateFolderModal(true);
         }
 
         // Clipboard operations
@@ -108,6 +113,8 @@ export const useKeyboardShortcuts = () => {
         if (e.key === "Escape") {
           hideContextMenu();
           setShowShortcutsHelp(false);
+          setShowCreateFileModal(false);
+          setShowCreateFolderModal(false);
         }
       }
     };
@@ -124,5 +131,10 @@ export const useKeyboardShortcuts = () => {
     showSearchBar,
     setShowSearchBar,
     setSelectedEntity,
+    selectedEntity,
+    showCreateFileModal,
+    setShowCreateFileModal,
+    showCreateFolderModal,
+    setShowCreateFolderModal,
   };
 };
