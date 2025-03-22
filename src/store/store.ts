@@ -1,15 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
-import currentDirectoryReducer from "./slices/currentDirectorySlice";
-import volumesReducer from "./slices/volumesSlice";
 import navigationReducer from "./slices/navigationSlice";
+import volumesReducer from "./slices/volumesSlice";
+import currentDirectoryReducer from "./slices/currentDirectorySlice";
 import contextMenuReducer from "./slices/contextMenuSlice";
+import clipboardReducer from "./slices/clipboardSlice";
 
 export const store = configureStore({
   reducer: {
-    currentDirectory: currentDirectoryReducer,
-    volumes: volumesReducer,
     navigation: navigationReducer,
+    volumes: volumesReducer,
+    currentDirectory: currentDirectoryReducer,
     contextMenu: contextMenuReducer,
+    clipboard: clipboardReducer,
   },
 });
 

@@ -123,7 +123,7 @@ const App = () => {
               title="Keyboard Shortcuts (Press ?)"
             >
               <Keyboard size={18} className="mr-1" />
-              <span className="text-sm">Shortcuts</span>
+              {/* <span className="text-sm"></span> */}
             </button>
           </div>
 

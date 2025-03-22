@@ -119,7 +119,7 @@ import {
   selectClipboardOperation,
 } from "../store/slices/clipboardSlice";
 import { openDirectory } from "../ipc";
-import path from "path-browserify";
+// import path from "path-browserify";
 
 export const useFileActions = () => {
   const dispatch = useAppDispatch();
