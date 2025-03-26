@@ -32,15 +32,21 @@ const InputModal = ({
   }, [visible, initialValue]);
 
   const handleSubmit = () => {
+    console.log("Input Modal Submit Called");
+    console.log("Input Value:", inputValue);
+
     const validationError =
       validation?.(inputValue) ||
       (inputValue.length < 1 ? "Input cannot be empty" : null);
+
+    console.log("Validation Error:", validationError);
 
     if (validationError) {
       setError(validationError);
       return;
     }
 
+    console.log("Calling onSubmit with:", inputValue);
     onSubmit(inputValue);
     handleClose();
   };

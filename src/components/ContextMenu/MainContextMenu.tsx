@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
 import { ContextMenuPosition } from "../../types";
-import { useFileActions } from "../../hooks/useFileActions";
-import { useClipboard } from "../../hooks/useClipboard";
-import { selectClipboardEntity } from "../../store/slices/clipboardSlice";
-import { useAppSelector } from "../../store/hooks";
+import { useAppDispatch } from "../../store/hooks";
+
+import {
+  setShowCreateFileModal,
+  setShowCreateFolderModal,
+} from "../../store/slices/modalSlice";
 
 interface MainContextMenuProps {
   position: ContextMenuPosition;
@@ -11,10 +13,8 @@ interface MainContextMenuProps {
 }
 
 const MainContextMenu = ({ position, onClose }: MainContextMenuProps) => {
+  const dispatch = useAppDispatch();
   const menuRef = useRef<HTMLDivElement>(null);
-  const { handleCreateFile, handleCreateDirectory, handlePaste } =
-    useFileActions();
-  const clipboardEntity = useAppSelector(selectClipboardEntity);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -36,18 +36,12 @@ const MainContextMenu = ({ position, onClose }: MainContextMenuProps) => {
   };
 
   const showCreateFileDialog = () => {
-    const fileName = prompt("Enter file name:");
-    if (fileName) {
-      handleCreateFile(fileName);
-    }
+    dispatch(setShowCreateFileModal(true));
     onClose();
   };
 
   const showCreateFolderDialog = () => {
-    const folderName = prompt("Enter folder name:");
-    if (folderName) {
-      handleCreateDirectory(folderName);
-    }
+    dispatch(setShowCreateFolderModal(true));
     onClose();
   };
 
@@ -69,21 +63,6 @@ const MainContextMenu = ({ position, onClose }: MainContextMenuProps) => {
       >
         <span className="mr-2">📁</span> New Folder
       </button>
-
-      {clipboardEntity && (
-        <>
-          <div className="border-t border-gray-700 my-1"></div>
-          <button
-            className="px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 w-full text-left flex items-center"
-            onClick={() => {
-              handlePaste();
-              onClose();
-            }}
-          >
-            <span className="mr-2">📋</span> Paste
-          </button>
-        </>
-      )}
     </div>
   );
 };

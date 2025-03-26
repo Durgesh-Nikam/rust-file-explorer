@@ -3,7 +3,7 @@ import navigationReducer from "./slices/navigationSlice";
 import volumesReducer from "./slices/volumesSlice";
 import currentDirectoryReducer from "./slices/currentDirectorySlice";
 import contextMenuReducer from "./slices/contextMenuSlice";
-import clipboardReducer from "./slices/clipboardSlice";
+import modalReducer from "./slices/modalSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +11,7 @@ export const store = configureStore({
     volumes: volumesReducer,
     currentDirectory: currentDirectoryReducer,
     contextMenu: contextMenuReducer,
-    clipboard: clipboardReducer,
+    modal: modalReducer,
   },
 });
 

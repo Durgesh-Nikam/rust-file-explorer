@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-
 interface ShortcutHelpProps {
   isOpen: boolean;
   onClose: () => void;
@@ -11,6 +9,7 @@ const ShortcutsHelpDialog = ({ isOpen, onClose }: ShortcutHelpProps) => {
   const shortcuts = [
     { keys: "Alt + ←", description: "Go back" },
     { keys: "Alt + →", description: "Go forward" },
+    { keys: "Ctrl + K", description: "Focus search bar" },
     { keys: "Ctrl + N", description: "Create new file" },
     { keys: "Ctrl + Shift + N", description: "Create new folder" },
     { keys: "Delete", description: "Delete selected item" },
@@ -18,10 +17,6 @@ const ShortcutsHelpDialog = ({ isOpen, onClose }: ShortcutHelpProps) => {
     { keys: "Esc", description: "Close menus and dialogs" },
     { keys: "Shift + F10", description: "Open context menu" },
     { keys: "?", description: "Show/hide keyboard shortcuts" },
-    { keys: "Ctrl + C", description: "Copy selected item" },
-    { keys: "Ctrl + X", description: "Cut selected item" },
-    { keys: "Ctrl + V", description: "Paste from clipboard" },
-    { keys: "Ctrl + K", description: "Focus search bar" },
   ];
 
   return (

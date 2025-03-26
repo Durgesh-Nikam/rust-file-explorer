@@ -5,29 +5,22 @@ import { goBack, goForward } from "../store/slices/navigationSlice";
 import { useFileActions } from "./useFileActions";
 import { useContextMenu } from "./useContextMenu";
 import { ContextMenuType } from "../types";
-import { EntityContextPayload } from "../types";
-import { useClipboard } from "./useClipboard";
-import { InputModalManager } from "../components/InputModalManager";
+
+import {
+  setShowCreateFileModal,
+  setShowCreateFolderModal,
+} from "../store/slices/modalSlice";
 
 export const useKeyboardShortcuts = () => {
   const dispatch = useAppDispatch();
   const currentPath = useAppSelector(selectCurrentPath);
   const { showContextMenu, hideContextMenu } = useContextMenu();
-  const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
-  const [showSearchBar, setShowSearchBar] = useState(false);
-  const [selectedEntity, setSelectedEntity] =
-    useState<EntityContextPayload | null>(null);
 
   // Reference to fileActions to avoid circular dependency
   const fileActions = useFileActions();
 
-  // Get clipboard functionality
-  const { copyToClipboard, cutToClipboard, pasteFromClipboard } =
-    useClipboard();
-
-  // File/folder creation modal states
-  const [showCreateFileModal, setShowCreateFileModal] = useState(false);
-  const [showCreateFolderModal, setShowCreateFolderModal] = useState(false);
+  const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
+  const [showSearchBar, setShowSearchBar] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -69,34 +62,13 @@ export const useKeyboardShortcuts = () => {
         // New file (Ctrl+N)
         if (e.ctrlKey && e.key === "n" && !e.shiftKey) {
           e.preventDefault();
-          setShowCreateFileModal(true);
+          dispatch(setShowCreateFileModal(true));
         }
 
         // New folder (Ctrl+Shift+N)
         if (e.ctrlKey && e.shiftKey && e.key === "N") {
           e.preventDefault();
-          setShowCreateFolderModal(true);
-        }
-
-        // Clipboard operations
-        if (selectedEntity) {
-          // Copy (Ctrl+C)
-          if (e.ctrlKey && e.key === "c") {
-            e.preventDefault();
-            copyToClipboard(selectedEntity);
-          }
-
-          // Cut (Ctrl+X)
-          if (e.ctrlKey && e.key === "x") {
-            e.preventDefault();
-            cutToClipboard(selectedEntity);
-          }
-        }
-
-        // Paste (Ctrl+V)
-        if (e.ctrlKey && e.key === "v") {
-          e.preventDefault();
-          pasteFromClipboard();
+          dispatch(setShowCreateFolderModal(true));
         }
 
         // Context menu (Shift+F10 or context menu key)
@@ -113,8 +85,8 @@ export const useKeyboardShortcuts = () => {
         if (e.key === "Escape") {
           hideContextMenu();
           setShowShortcutsHelp(false);
-          setShowCreateFileModal(false);
-          setShowCreateFolderModal(false);
+          dispatch(setShowCreateFileModal(false));
+          dispatch(setShowCreateFolderModal(false));
         }
       }
     };
@@ -123,18 +95,12 @@ export const useKeyboardShortcuts = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [currentPath, dispatch, showShortcutsHelp, selectedEntity]);
+  }, [currentPath, dispatch, showShortcutsHelp]);
 
   return {
     showShortcutsHelp,
     setShowShortcutsHelp,
     showSearchBar,
     setShowSearchBar,
-    setSelectedEntity,
-    selectedEntity,
-    showCreateFileModal,
-    setShowCreateFileModal,
-    showCreateFolderModal,
-    setShowCreateFolderModal,
   };
 };

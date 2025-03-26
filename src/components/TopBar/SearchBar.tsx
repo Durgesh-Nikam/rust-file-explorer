@@ -88,7 +88,7 @@ const SearchBar = ({
       >
         <input
           type="text"
-          placeholder={`Search ${currentPlace || "PC"}... (Ctrl+K)`}
+          placeholder={`Search ${currentPlace || "PC"}...`}
           className="w-full bg-gray-700 px-3 py-2 text-sm focus:outline-none rounded"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
