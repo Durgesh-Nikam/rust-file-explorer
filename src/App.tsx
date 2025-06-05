@@ -122,8 +122,7 @@ const App = () => {
               className="p-2 rounded hover:bg-gray-700 text-gray-400 hover:text-white flex items-center"
               title="Keyboard Shortcuts (Press ?)"
             >
-              <Keyboard size={18} className="mr-1" />
-              {/* <span className="text-sm"></span> */}
+              <Keyboard size={18} />
             </button>
           </div>
 

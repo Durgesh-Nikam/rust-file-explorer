@@ -29,7 +29,7 @@ const ShortcutsHelpDialog = ({ isOpen, onClose }: ShortcutHelpProps) => {
           </button>
         </div>
 
-        <div className="divide-y divide-gray-700 max-h-96 overflow-y-auto">
+        <div className="divide-y divide-gray-700 max-h-96 overflow-y-scroll px-4 custom-scrollbar">
           {shortcuts.map((shortcut, index) => (
             <div key={index} className="py-2 flex justify-between">
               <span className="font-mono bg-gray-700 px-2 py-1 rounded text-sm">
