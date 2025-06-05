@@ -27,10 +27,17 @@ import FolderNavigation from "./components/FolderNavigation";
 import { useContextMenu } from "./hooks/useContextMenu";
 import ContextMenuManager from "./components/ContextMenu/ContextMenuManager";
 import PathBar from "./components/PathBar";
+import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
+import ShortcutsHelpDialog from "./components/ShortcutsHelpDialog";
+import { HelpCircle, Keyboard } from "lucide-react";
+import { InputModalManager } from "./components/InputModalManager";
 
 const App = () => {
   const dispatch = useAppDispatch();
   const { hideContextMenu, handleMainContext } = useContextMenu();
+
+  // Initialize keyboard shortcuts
+  const { showShortcutsHelp, setShowShortcutsHelp } = useKeyboardShortcuts();
 
   const directoryContents = useAppSelector(selectDirectoryContents);
   const volumes = useAppSelector(selectVolumes);
@@ -94,14 +101,32 @@ const App = () => {
       onContextMenu={handleMainContext}
     >
       <ContextMenuManager />
+      <InputModalManager />
+      <ShortcutsHelpDialog
+        isOpen={showShortcutsHelp}
+        onClose={() => setShowShortcutsHelp(false)}
+      />
+
       <header className="bg-gray-800 p-4 px-8">
         <div className="flex items-center justify-between">
-          <FolderNavigation
-            onBack={() => dispatch(goBack())}
-            onForward={() => dispatch(goForward())}
-            canGoBack={canGoBack}
-            canGoForward={canGoForward}
-          ></FolderNavigation>
+          <div className="flex items-center space-x-4">
+            <FolderNavigation
+              onBack={() => dispatch(goBack())}
+              onForward={() => dispatch(goForward())}
+              canGoBack={canGoBack}
+              canGoForward={canGoForward}
+            />
+
+            <button
+              onClick={() => setShowShortcutsHelp(true)}
+              className="p-2 rounded hover:bg-gray-700 text-gray-400 hover:text-white flex items-center"
+              title="Keyboard Shortcuts (Press ?)"
+            >
+              <Keyboard size={18} className="mr-1" />
+              {/* <span className="text-sm"></span> */}
+            </button>
+          </div>
+
           <SearchBar
             currentVolume={currentVolume}
             currentDirectoryPath={currentPath}

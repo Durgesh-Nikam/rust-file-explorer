@@ -17,31 +17,75 @@ export const useFileActions = () => {
   const dispatch = useAppDispatch();
   const currentPath = useAppSelector(selectCurrentPath);
 
+  // const handleCreateFile = async (name: string) => {
+  //   try {
+  //     const path = `${currentPath}/${name}`;
+  //     await createFile(path);
+  //     const newFileContent = createDirectoryContent("File", name, path);
+  //     dispatch(addContent(newFileContent));
+  //     console.log("Creating file:", name);
+  //   } catch (error) {
+  //     console.error("File creation failed:", error);
+  //   }
+  // };
+
+  // const handleCreateDirectory = async (name: string) => {
+  //   try {
+  //     const path = `${currentPath}/${name}`;
+  //     await createDirectory(path);
+
+  //     const newDirectoryContent = createDirectoryContent(
+  //       "Directory",
+  //       name,
+  //       path
+  //     );
+
+  //     dispatch(addContent(newDirectoryContent));
+  //     console.log("Creating directory:", name);
+  //   } catch (error) {
+  //     console.error("Directory creation failed:", error);
+  //   }
+  // };
+
   const handleCreateFile = async (name: string) => {
+    console.log("Attempting to create file:", name);
+    console.log("Current path:", currentPath);
     try {
       const path = `${currentPath}/${name}`;
+      console.log("Full file path:", path);
+
       await createFile(path);
+      console.log("File creation IPC call successful");
+
       const newFileContent = createDirectoryContent("File", name, path);
+      console.log("New file content:", newFileContent);
+
       dispatch(addContent(newFileContent));
-      console.log("Creating file:", name);
+      console.log("File creation dispatch successful");
     } catch (error) {
       console.error("File creation failed:", error);
     }
   };
 
   const handleCreateDirectory = async (name: string) => {
+    console.log("Attempting to create directory:", name);
+    console.log("Current path:", currentPath);
     try {
       const path = `${currentPath}/${name}`;
+      console.log("Full directory path:", path);
+
       await createDirectory(path);
+      console.log("Directory creation IPC call successful");
 
       const newDirectoryContent = createDirectoryContent(
         "Directory",
         name,
         path
       );
+      console.log("New directory content:", newDirectoryContent);
 
       dispatch(addContent(newDirectoryContent));
-      console.log("Creating directory:", name);
+      console.log("Directory creation dispatch successful");
     } catch (error) {
       console.error("Directory creation failed:", error);
     }
@@ -59,7 +103,7 @@ export const useFileActions = () => {
         entity.path
       );
       dispatch(deleteContent(content));
-      console.log("Deleting file:", entity.name);
+      console.log("Deleting directory:", entity.name);
     } catch (error) {
       console.error("Deletion failed:", error);
     }
@@ -83,10 +127,19 @@ export const useFileActions = () => {
     }
   };
 
+  const handleDelete = async (entity: EntityContextPayload) => {
+    if (entity.type === "File") {
+      await handleDeleteFile(entity);
+    } else {
+      await handleDeleteDirectory(entity);
+    }
+  };
+
   return {
     handleCreateFile,
     handleCreateDirectory,
     handleDeleteDirectory,
     handleDeleteFile,
+    handleDelete,
   };
 };

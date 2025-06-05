@@ -2,6 +2,7 @@ import { MouseEventHandler, useRef } from "react";
 import { DirectoryContentType, EntityContextPayload } from "../../types";
 import { Folder, File } from "lucide-react";
 import { useContextMenu } from "../../hooks/useContextMenu";
+import { useFileActions } from "../../hooks/useFileActions";
 
 interface DirectoryEntityProps {
   name: string;
@@ -18,6 +19,26 @@ const DirectoryEntity = ({
 }: DirectoryEntityProps) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const { handleEntityContext } = useContextMenu();
+  const { handleDelete } = useFileActions();
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    // Enter or Space triggers doubleClick action
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      if (onDoubleClick) {
+        const event = new MouseEvent(
+          "dblclick"
+        ) as unknown as React.MouseEvent<HTMLButtonElement>;
+        onDoubleClick(event);
+      }
+    }
+
+    // Delete key for direct deletion
+    if (e.key === "Delete") {
+      e.preventDefault();
+      handleDelete(entity);
+    }
+  };
 
   return (
     <div className="text-center" title={name}>
@@ -25,7 +46,9 @@ const DirectoryEntity = ({
         ref={buttonRef}
         onDoubleClick={onDoubleClick}
         onContextMenu={(e) => handleEntityContext(e, entity)}
-        className="w-full flex items-center rounded-lg bg-gray-800 p-3 transition-colors hover:bg-gray-700"
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        className={`w-full flex items-center rounded-lg bg-gray-800 p-3 transition-colors hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500`}
       >
         <div className="mr-3">
           {type === "File" ? (

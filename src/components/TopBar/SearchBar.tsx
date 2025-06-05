@@ -2,8 +2,8 @@ import { Search, X } from "lucide-react";
 import SearchFilter from "./SearchFilter";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { DirectoryContent } from "../../types";
-
 import { searchDirectory } from "../../ipc";
+import { useKeyboardShortcuts } from "../../hooks/useKeyboardShortcuts";
 
 interface Props {
   currentVolume: string;
@@ -32,10 +32,18 @@ const SearchBar = ({
     acceptDirectories: true,
   });
 
+  // Get keyboard shortcut state
+  const { showSearchBar } = useKeyboardShortcuts();
+
   useEffect(() => {
     const split = currentDirectoryPath.split("\\");
     setCurrentPlace(split[split.length - 2]);
   }, [currentDirectoryPath]);
+
+  // Sync search bar expansion with keyboard shortcut
+  useEffect(() => {
+    setIsSearchExpanded(showSearchBar);
+  }, [showSearchBar]);
 
   const toggleSearch = () => {
     setIsSearchExpanded(!isSearchExpanded);
@@ -65,6 +73,10 @@ const SearchBar = ({
       handleSearch();
       setShowAdvancedSearch(false);
     }
+
+    if (e.key === "Escape") {
+      setIsSearchExpanded(false);
+    }
   };
 
   return (
@@ -93,6 +105,7 @@ const SearchBar = ({
         onClick={toggleSearch}
         className="ml-2 rounded-full p-2 text-whit hover:bg-gray-700 hover:text-gray-100 bg-blue-600"
         aria-label={isSearchExpanded ? "Close search" : "Open search"}
+        title="Search (Ctrl+K)"
       >
         {isSearchExpanded ? (
           <X className="h-5 w-5" />
